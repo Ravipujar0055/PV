@@ -5,17 +5,49 @@ import { JWT_SECRET } from '../middleware/authMiddleware.js';
 import { logAudit } from '../services/auditService.js';
 
 /**
- * Normalizes Date of Birth strings to standard YYYY-MM-DD
+ * Normalizes Date of Birth strings/objects to standard YYYY-MM-DD
  * Handles:
- * - YYYY-MM-DD / YYYY/MM/DD
- * - DD-MM-YYYY / DD/MM/YYYY
- * - DD.MM.YYYY
+ * - Date objects & Excel serial numbers
+ * - YYYY-MM-DD / YYYY/MM/DD / YYYY.MM.DD
+ * - DD-MM-YYYY / DD/MM/YYYY / DD.MM.YYYY
+ * - MM-DD-YYYY / MM/DD/YYYY
+ * - Textual dates ("15-Apr-2003", "April 15, 2003")
  */
 export function normalizeDob(dobStr) {
-  if (!dobStr) return '';
+  if (!dobStr && dobStr !== 0) return '';
+
+  if (dobStr instanceof Date && !isNaN(dobStr.getTime())) {
+    const shifted = new Date(dobStr.getTime() + 12 * 60 * 60 * 1000);
+    const y = shifted.getUTCFullYear();
+    const m = String(shifted.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(shifted.getUTCDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  if (typeof dobStr === 'number' && dobStr > 20000 && dobStr < 60000) {
+    const date = new Date(Math.round((Math.round(dobStr) - 25569) * 86400 * 1000));
+    const y = date.getUTCFullYear();
+    const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const d = String(date.getUTCDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
   let clean = String(dobStr).trim();
+  if (!clean) return '';
   if (clean.includes('T')) clean = clean.split('T')[0];
   if (clean.includes(' ')) clean = clean.split(' ')[0];
+
+  // Numeric serial in string form e.g. "37726"
+  if (/^\d{5}$/.test(clean)) {
+    const num = Number(clean);
+    if (num > 20000 && num < 60000) {
+      const date = new Date(Math.round((num - 25569) * 86400 * 1000));
+      const y = date.getUTCFullYear();
+      const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(date.getUTCDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+  }
 
   // YYYY-MM-DD or YYYY/MM/DD or YYYY.MM.DD
   const ymd = clean.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);
@@ -26,13 +58,44 @@ export function normalizeDob(dobStr) {
     return `${y}-${m}-${d}`;
   }
 
-  // DD-MM-YYYY or DD/MM/YYYY or DD.MM.YYYY
-  const dmy = clean.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/);
+  // DD-MM-YYYY or MM/DD/YYYY
+  const dmy = clean.match(/^(\d{1,2})([-\/.])(\d{1,2})\2(\d{4})$/);
   if (dmy) {
-    const d = dmy[1].padStart(2, '0');
-    const m = dmy[2].padStart(2, '0');
-    const y = dmy[3];
+    const p1 = parseInt(dmy[1], 10);
+    const sep = dmy[2];
+    const p2 = parseInt(dmy[3], 10);
+    const y = dmy[4];
+    let d, m;
+    if (p1 > 12) {
+      // p1 is day, p2 is month (DD-MM-YYYY)
+      d = String(p1).padStart(2, '0');
+      m = String(p2).padStart(2, '0');
+    } else if (p2 > 12) {
+      // p1 is month, p2 is day (MM-DD-YYYY)
+      m = String(p1).padStart(2, '0');
+      d = String(p2).padStart(2, '0');
+    } else if (sep === '/') {
+      // Slash delimiter (Excel / Google Sheets standard M/D/YYYY)
+      m = String(p1).padStart(2, '0');
+      d = String(p2).padStart(2, '0');
+    } else {
+      // Hyphen or other delimiter (DD-MM-YYYY)
+      d = String(p1).padStart(2, '0');
+      m = String(p2).padStart(2, '0');
+    }
     return `${y}-${m}-${d}`;
+  }
+
+  // Textual date parse fallback (e.g. "15-Apr-2003", "April 15 2003")
+  const parsedTimestamp = Date.parse(clean);
+  if (!isNaN(parsedTimestamp)) {
+    const dObj = new Date(parsedTimestamp);
+    const y = dObj.getFullYear();
+    if (y >= 1950 && y <= 2030) {
+      const m = String(dObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
   }
 
   return clean;

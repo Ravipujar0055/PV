@@ -34,7 +34,7 @@ export default function AdminCompanies() {
   };
   const [formData, setFormData] = useState(initialForm);
 
-  const availableBranches = ['CSE', 'ISE', 'ECE', 'MECH', 'CIVIL', 'EEE', 'AI_DS', 'CYBER_SEC'];
+  const availableBranches = ['CSE', 'ISE', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'CIVIL', 'CYBER_SEC'];
 
   const fetchDrives = async () => {
     try {

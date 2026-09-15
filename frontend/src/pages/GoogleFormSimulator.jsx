@@ -7,17 +7,18 @@ export default function GoogleFormSimulator() {
   const { user } = useAuth();
 
   const [formData, setFormData] = useState({
-    usn: user?.usn || '1MS21CS042',
-    name: user?.name || 'Rahul Sharma',
-    email: 'rahul.sharma@placement.edu',
-    branch: 'CSE',
-    cgpa: '8.20', // Pre-fill with critical test scenario
+    usn: user?.usn || '4NI23IS164',
+    name: user?.name || 'Ravi Annappa Pujar',
+    email: 'ravipujar8073@gmail.com',
+    dob: user?.dob || '2005-03-23',
+    branch: 'ISE',
+    cgpa: '9.52',
     activeBacklogs: '0',
     historyOfBacklogs: '0',
-    tenthPercentage: '85.0',
-    twelfthPercentage: '82.0',
+    tenthPercentage: '94.4',
+    twelfthPercentage: '93',
     graduationYear: '2027',
-    projectTitle: 'E-Commerce Portal',
+    projectTitle: '',
     workExperience: '0'
   });
 
@@ -26,15 +27,16 @@ export default function GoogleFormSimulator() {
 
   const fillHonestData = () => {
     setFormData({
-      usn: '1MS21CS001',
-      name: 'Aarav Patel',
-      email: 'aarav.patel@placement.edu',
-      branch: 'CSE',
-      cgpa: '8.65',
+      usn: '4NI23IS164',
+      name: 'Ravi Annappa Pujar',
+      email: 'ravipujar8073@gmail.com',
+      dob: '2005-03-23',
+      branch: 'ISE',
+      cgpa: '9.52',
       activeBacklogs: '0',
       historyOfBacklogs: '0',
-      tenthPercentage: '88.5',
-      twelfthPercentage: '86.0',
+      tenthPercentage: '94.4',
+      twelfthPercentage: '93',
       graduationYear: '2027',
       projectTitle: 'Distributed Microservices Broker',
       workExperience: '0'
@@ -44,18 +46,19 @@ export default function GoogleFormSimulator() {
 
   const fillFraudulentData = () => {
     setFormData({
-      usn: '1MS21CS042',
-      name: 'Rahul Sharma',
-      email: 'rahul.sharma@placement.edu',
-      branch: 'CSE',
-      cgpa: '8.20', // FAKE: inflated from 6.80!
-      activeBacklogs: '0', // FAKE: concealed 1 active backlog!
-      historyOfBacklogs: '0', // FAKE: concealed backlog history!
-      tenthPercentage: '72.0',
-      twelfthPercentage: '68.5',
+      usn: '4NI23IS164',
+      name: 'Ravi Annappa Pujar',
+      email: 'ravipujar8073@gmail.com',
+      dob: '2003-08-22',
+      branch: 'ISE',
+      cgpa: '5.20', // FAKE: inflated from 6.80!
+      activeBacklogs: '5', // FAKE: concealed 1 active backlog!
+      historyOfBacklogs: '3', // FAKE: concealed backlog history!
+      tenthPercentage: '42.0',
+      twelfthPercentage: '48.5',
       graduationYear: '2027',
       projectTitle: 'Campus Event Portal',
-      workExperience: '0'
+      workExperience: '2'
     });
     setResult(null);
   };
@@ -69,6 +72,10 @@ export default function GoogleFormSimulator() {
           USN: formData.usn,
           'Candidate Name': formData.name,
           'Primary Email': formData.email,
+          'Date of Birth (DOB)': formData.dob,
+          'Date of Birth': formData.dob,
+          DOB: formData.dob,
+          dob: formData.dob,
           'Branch': formData.branch,
           'CGPA': parseFloat(formData.cgpa),
           'Active Backlogs': parseInt(formData.activeBacklogs, 10),
@@ -106,7 +113,7 @@ export default function GoogleFormSimulator() {
           Google Form Placement Registration Simulator
         </h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem' }}>
-          Test how the institutional verification engine reconciles unverified Google Form responses. 
+          Test how the institutional verification engine reconciles unverified Google Form responses.
           When students submit false academic figures, the system detects discrepancies, flags the record, and notifies administrators.
         </p>
       </div>
@@ -124,7 +131,7 @@ export default function GoogleFormSimulator() {
         </div>
 
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <button 
+          <button
             type="button"
             className="btn btn-danger"
             onClick={fillFraudulentData}
@@ -133,7 +140,7 @@ export default function GoogleFormSimulator() {
             ⚠️ Load Critical Fraud Test (Rahul Sharma: 6.80 CGPA claiming 8.20)
           </button>
 
-          <button 
+          <button
             type="button"
             className="btn btn-success"
             onClick={fillHonestData}
@@ -161,41 +168,53 @@ export default function GoogleFormSimulator() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
             <div className="form-group">
               <label className="form-label">Student USN *</label>
-              <input 
-                className="form-input" 
-                value={formData.usn} 
+              <input
+                className="form-input"
+                value={formData.usn}
                 onChange={e => setFormData({ ...formData, usn: e.target.value })}
-                required 
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Student Name *</label>
-              <input 
-                className="form-input" 
-                value={formData.name} 
+              <input
+                className="form-input"
+                value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                required 
+                required
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Email Address *</label>
-              <input 
-                className="form-input" 
-                value={formData.email} 
+              <input
+                className="form-input"
+                value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                required 
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Date of Birth (DOB) *</label>
+              <input
+                className="form-input"
+                type="date"
+                value={formData.dob}
+                onChange={e => setFormData({ ...formData, dob: e.target.value })}
+                required
+                style={{ colorScheme: 'dark' }}
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">Branch *</label>
-              <input 
-                className="form-input" 
-                value={formData.branch} 
+              <input
+                className="form-input"
+                value={formData.branch}
                 onChange={e => setFormData({ ...formData, branch: e.target.value })}
-                required 
+                required
               />
             </div>
 
@@ -203,13 +222,13 @@ export default function GoogleFormSimulator() {
               <label className="form-label" style={{ color: '#fca5a5' }}>
                 Self-Reported CGPA (Academic Field) *
               </label>
-              <input 
-                className="form-input" 
-                type="number" 
-                step="0.01" 
-                value={formData.cgpa} 
+              <input
+                className="form-input"
+                type="number"
+                step="0.01"
+                value={formData.cgpa}
                 onChange={e => setFormData({ ...formData, cgpa: e.target.value })}
-                required 
+                required
                 style={{ fontWeight: 700, borderColor: '#ef4444' }}
               />
               <div style={{ fontSize: '0.7rem', color: '#f87171', marginTop: '0.25rem' }}>
@@ -221,12 +240,12 @@ export default function GoogleFormSimulator() {
               <label className="form-label" style={{ color: '#fca5a5' }}>
                 Self-Reported Active Backlogs *
               </label>
-              <input 
-                className="form-input" 
-                type="number" 
-                value={formData.activeBacklogs} 
+              <input
+                className="form-input"
+                type="number"
+                value={formData.activeBacklogs}
                 onChange={e => setFormData({ ...formData, activeBacklogs: e.target.value })}
-                required 
+                required
                 style={{ fontWeight: 700, borderColor: '#ef4444' }}
               />
               <div style={{ fontSize: '0.7rem', color: '#f87171', marginTop: '0.25rem' }}>
@@ -236,30 +255,30 @@ export default function GoogleFormSimulator() {
 
             <div className="form-group">
               <label className="form-label">10th Percentage</label>
-              <input 
-                className="form-input" 
-                type="number" 
+              <input
+                className="form-input"
+                type="number"
                 step="0.1"
-                value={formData.tenthPercentage} 
+                value={formData.tenthPercentage}
                 onChange={e => setFormData({ ...formData, tenthPercentage: e.target.value })}
               />
             </div>
 
             <div className="form-group">
               <label className="form-label">12th Percentage</label>
-              <input 
-                className="form-input" 
-                type="number" 
+              <input
+                className="form-input"
+                type="number"
                 step="0.1"
-                value={formData.twelfthPercentage} 
+                value={formData.twelfthPercentage}
                 onChange={e => setFormData({ ...formData, twelfthPercentage: e.target.value })}
               />
             </div>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="btn btn-primary"
               disabled={submitting}
               style={{ padding: '0.75rem 1.75rem' }}
@@ -323,8 +342,8 @@ export default function GoogleFormSimulator() {
               </div>
 
               <div style={{ background: 'rgba(239, 68, 68, 0.12)', padding: '0.9rem 1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid rgba(239, 68, 68, 0.3)', fontSize: '0.85rem', color: '#fca5a5' }}>
-                <strong>Institutional Rule Enforced:</strong> The student's claimed value has been <strong>rejected</strong>. 
-                The verified institutional record was NOT altered. Placement eligibility for ABC Technologies and other companies 
+                <strong>Institutional Rule Enforced:</strong> The student's claimed value has been <strong>rejected</strong>.
+                The verified institutional record was NOT altered. Placement eligibility for ABC Technologies and other companies
                 will continue to use the certified institutional values.
               </div>
             </div>

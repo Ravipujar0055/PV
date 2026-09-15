@@ -275,8 +275,12 @@ export default function AdminApplications() {
             <option value="">All Branches</option>
             <option value="CSE">CSE</option>
             <option value="ISE">ISE</option>
+            <option value="AIML">AIML</option>
+            <option value="AIDS">AIDS</option>
             <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
             <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
           </select>
 
           {/* Min CGPA Filter */}

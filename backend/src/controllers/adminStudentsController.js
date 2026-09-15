@@ -8,7 +8,7 @@ export async function getAllStudentsAdmin(req, res) {
   let query = `
     SELECT s.id, s.usn, s.name, s.email, s.dob, s.mobile, s.gender,
            u.status as user_status,
-           ar.cgpa, ar.tenth_percentage, ar.twelfth_percentage, ar.branch, ar.degree,
+           ar.cgpa, ar.tenth_percentage, ar.tenth_year, ar.twelfth_percentage, ar.twelfth_year, ar.branch, ar.degree,
            ar.graduation_year, ar.active_backlogs, ar.backlog_history_count,
            ar.verification_status, ar.verified_by, ar.verified_at,
            (SELECT COUNT(*) FROM applications WHERE student_id = s.id) as application_count,
@@ -88,7 +88,7 @@ export async function getStudentDetailsAdmin(req, res) {
 export async function editVerifiedRecordAdmin(req, res) {
   const { usn } = req.params;
   const {
-    cgpa, tenth_percentage, twelfth_percentage, branch,
+    cgpa, tenth_percentage, tenth_year, twelfth_percentage, twelfth_year, branch,
     active_backlogs, backlog_history_count, graduation_year,
     education_gap_months, reason, dob, email, mobile
   } = req.body;
@@ -151,7 +151,9 @@ export async function editVerifiedRecordAdmin(req, res) {
     UPDATE academic_records
     SET cgpa = COALESCE(?, cgpa),
         tenth_percentage = COALESCE(?, tenth_percentage),
+        tenth_year = COALESCE(?, tenth_year),
         twelfth_percentage = COALESCE(?, twelfth_percentage),
+        twelfth_year = COALESCE(?, twelfth_year),
         branch = COALESCE(?, branch),
         active_backlogs = COALESCE(?, active_backlogs),
         backlog_history_count = COALESCE(?, backlog_history_count),
@@ -165,7 +167,9 @@ export async function editVerifiedRecordAdmin(req, res) {
   `, [
     cgpa !== undefined ? Number(cgpa) : null,
     tenth_percentage !== undefined ? Number(tenth_percentage) : null,
+    tenth_year !== undefined && tenth_year !== '' ? Number(tenth_year) : null,
     twelfth_percentage !== undefined ? Number(twelfth_percentage) : null,
+    twelfth_year !== undefined && twelfth_year !== '' ? Number(twelfth_year) : null,
     branch ? branch.toUpperCase().trim() : null,
     active_backlogs !== undefined ? Number(active_backlogs) : null,
     backlog_history_count !== undefined ? Number(backlog_history_count) : null,

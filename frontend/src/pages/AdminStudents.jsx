@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { api } from '../api/client';
 import { Search, ShieldCheck, ShieldAlert, Edit2, Lock, UserX, UserCheck, Eye, Mail } from 'lucide-react';
+
+const STANDARD_BRANCHES = ['CSE', 'ISE', 'AIML', 'AIDS', 'ECE', 'EEE', 'MECH', 'CIVIL'];
 
 export default function AdminStudents() {
   const [students, setStudents] = useState([]);
@@ -12,11 +14,22 @@ export default function AdminStudents() {
   const [editingRecord, setEditingRecord] = useState(null);
   const [message, setMessage] = useState(null);
 
+  // Combine standard branches with any distinct branches from loaded student records
+  const availableBranches = useMemo(() => {
+    const branchSet = new Set(STANDARD_BRANCHES);
+    students.forEach(s => {
+      if (s.branch) branchSet.add(s.branch.toUpperCase().trim());
+    });
+    return Array.from(branchSet);
+  }, [students]);
+
   // Edit form state
   const [editFormData, setEditFormData] = useState({
     cgpa: '',
     tenth_percentage: '',
+    tenth_year: '',
     twelfth_percentage: '',
+    twelfth_year: '',
     branch: '',
     active_backlogs: 0,
     backlog_history_count: 0,
@@ -96,7 +109,9 @@ export default function AdminStudents() {
     setEditFormData({
       cgpa: student.cgpa !== undefined ? student.cgpa : (student.academic?.cgpa || ''),
       tenth_percentage: student.tenth_percentage !== undefined ? student.tenth_percentage : (student.academic?.tenth_percentage || ''),
+      tenth_year: student.tenth_year !== undefined ? student.tenth_year : (student.academic?.tenth_year || ''),
       twelfth_percentage: student.twelfth_percentage !== undefined ? student.twelfth_percentage : (student.academic?.twelfth_percentage || ''),
+      twelfth_year: student.twelfth_year !== undefined ? student.twelfth_year : (student.academic?.twelfth_year || ''),
       branch: student.branch || student.academic?.branch || '',
       active_backlogs: student.active_backlogs !== undefined ? student.active_backlogs : (student.academic?.active_backlogs ?? 0),
       backlog_history_count: student.backlog_history_count !== undefined ? student.backlog_history_count : (student.academic?.backlog_history_count ?? 0),
@@ -156,8 +171,8 @@ export default function AdminStudents() {
       <div className="card" style={{ marginBottom: '1.5rem', padding: '1rem' }}>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '0.5rem', flex: 1, minWidth: '280px' }}>
-            <input 
-              className="form-input" 
+            <input
+              className="form-input"
               placeholder="Search by USN (e.g. 1MS21CS042) or student name..."
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -172,18 +187,17 @@ export default function AdminStudents() {
               className="form-select" 
               value={branchFilter} 
               onChange={e => setBranchFilter(e.target.value)}
-              style={{ width: 'auto', minWidth: '130px' }}
+              style={{ width: 'auto', minWidth: '140px' }}
             >
               <option value="">All Branches</option>
-              <option value="CSE">CSE</option>
-              <option value="ISE">ISE</option>
-              <option value="ECE">ECE</option>
-              <option value="MECH">MECH</option>
+              {availableBranches.map(b => (
+                <option key={b} value={b}>{b}</option>
+              ))}
             </select>
 
-            <select 
-              className="form-select" 
-              value={verificationFilter} 
+            <select
+              className="form-select"
+              value={verificationFilter}
               onChange={e => setVerificationFilter(e.target.value)}
               style={{ width: 'auto', minWidth: '150px' }}
             >
@@ -248,14 +262,21 @@ export default function AdminStudents() {
                       {s.cgpa?.toFixed(2)}
                     </span>
                   </td>
-                  <td>{s.tenth_percentage?.toFixed(1)}% / {s.twelfth_percentage?.toFixed(1)}%</td>
+                  <td>
+                    <div>{s.tenth_percentage?.toFixed(1)}% / {s.twelfth_percentage?.toFixed(1)}%</div>
+                    {(s.tenth_year || s.twelfth_year) && (
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+                        YOP: {s.tenth_year || '—'} / {s.twelfth_year || '—'}
+                      </div>
+                    )}
+                  </td>
                   <td>
                     <span style={{ fontWeight: 700, color: s.active_backlogs > 0 ? '#f87171' : '#34d399' }}>
                       {s.active_backlogs}
                     </span>
                   </td>
                   <td>
-                    <span 
+                    <span
                       className={`badge ${s.verification_status === 'VERIFIED' ? 'badge-verified' : s.verification_status === 'FLAGGED' ? 'badge-flagged' : 'badge-pending'}`}
                       style={{ cursor: 'pointer' }}
                       onClick={() => handleToggleVerification(s.usn, s.verification_status)}
@@ -271,8 +292,8 @@ export default function AdminStudents() {
                   </td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.4rem' }}>
-                      <button 
-                        className="btn btn-secondary" 
+                      <button
+                        className="btn btn-secondary"
                         onClick={() => handleViewDetails(s.usn)}
                         style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                         title="View Student File"
@@ -280,8 +301,8 @@ export default function AdminStudents() {
                         <Eye size={13} />
                       </button>
 
-                      <button 
-                        className="btn btn-secondary" 
+                      <button
+                        className="btn btn-secondary"
                         onClick={() => handleOpenEditRecord(s)}
                         style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                         title="Edit Verified Record (Audit Tracked)"
@@ -289,8 +310,8 @@ export default function AdminStudents() {
                         <Edit2 size={13} />
                       </button>
 
-                      <button 
-                        className={`btn ${s.user_status === 'blocked' ? 'btn-success' : 'btn-danger'}`} 
+                      <button
+                        className={`btn ${s.user_status === 'blocked' ? 'btn-success' : 'btn-danger'}`}
                         onClick={() => handleToggleBlock(s.usn, s.user_status)}
                         style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
                         title={s.user_status === 'blocked' ? 'Unblock Student' : 'Block Student from Applications'}
@@ -405,7 +426,7 @@ export default function AdminStudents() {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem', gap: '0.75rem', flexWrap: 'wrap' }}>
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => {
                   handleOpenEditRecord(selectedStudent);
@@ -416,7 +437,7 @@ export default function AdminStudents() {
                 <Edit2 size={14} />
                 Edit Record & Contact
               </button>
-              <button 
+              <button
                 className={`btn ${selectedStudent.student.user_status === 'blocked' ? 'btn-success' : 'btn-danger'}`}
                 onClick={() => handleToggleBlock(selectedStudent.student.usn, selectedStudent.student.user_status)}
               >
@@ -445,7 +466,7 @@ export default function AdminStudents() {
             <div className="lock-banner" style={{ marginBottom: '1rem' }}>
               <Lock size={16} color="#34d399" />
               <div>
-                <strong>Audit Compliance Warning:</strong> Any edit to institutional verified data is recorded in 
+                <strong>Audit Compliance Warning:</strong> Any edit to institutional verified data is recorded in
                 the immutable audit log with your administrative user ID, timestamp, and old vs new values.
               </div>
             </div>
@@ -454,59 +475,79 @@ export default function AdminStudents() {
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
                 <div className="form-group">
                   <label className="form-label">Certified CGPA</label>
-                  <input 
-                    className="form-input" 
-                    type="number" 
-                    step="0.01" 
-                    value={editFormData.cgpa} 
+                  <input
+                    className="form-input"
+                    type="number"
+                    step="0.01"
+                    value={editFormData.cgpa}
                     onChange={e => setEditFormData({ ...editFormData, cgpa: e.target.value })}
-                    required 
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Branch</label>
-                  <input 
-                    className="form-input" 
-                    value={editFormData.branch} 
+                  <input
+                    className="form-input"
+                    value={editFormData.branch}
                     onChange={e => setEditFormData({ ...editFormData, branch: e.target.value })}
-                    required 
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label className="form-label">10th %</label>
-                  <input 
-                    className="form-input" 
-                    type="number" 
-                    step="0.1" 
-                    value={editFormData.tenth_percentage} 
+                  <input
+                    className="form-input"
+                    type="number"
+                    step="0.1"
+                    value={editFormData.tenth_percentage}
                     onChange={e => setEditFormData({ ...editFormData, tenth_percentage: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
+                  <label className="form-label">10th Passing Year</label>
+                  <input
+                    className="form-input"
+                    type="number"
+                    value={editFormData.tenth_year}
+                    onChange={e => setEditFormData({ ...editFormData, tenth_year: e.target.value })}
+                    placeholder="e.g. 2019"
+                  />
+                </div>
+                <div className="form-group">
                   <label className="form-label">12th %</label>
-                  <input 
-                    className="form-input" 
-                    type="number" 
-                    step="0.1" 
-                    value={editFormData.twelfth_percentage} 
+                  <input
+                    className="form-input"
+                    type="number"
+                    step="0.1"
+                    value={editFormData.twelfth_percentage}
                     onChange={e => setEditFormData({ ...editFormData, twelfth_percentage: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
+                  <label className="form-label">12th / PUC Passing Year</label>
+                  <input
+                    className="form-input"
+                    type="number"
+                    value={editFormData.twelfth_year}
+                    onChange={e => setEditFormData({ ...editFormData, twelfth_year: e.target.value })}
+                    placeholder="e.g. 2021"
+                  />
+                </div>
+                <div className="form-group">
                   <label className="form-label">Active Backlogs Count</label>
-                  <input 
-                    className="form-input" 
-                    type="number" 
-                    value={editFormData.active_backlogs} 
+                  <input
+                    className="form-input"
+                    type="number"
+                    value={editFormData.active_backlogs}
                     onChange={e => setEditFormData({ ...editFormData, active_backlogs: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Graduation Year</label>
-                  <input 
-                    className="form-input" 
-                    type="number" 
-                    value={editFormData.graduation_year} 
+                  <input
+                    className="form-input"
+                    type="number"
+                    value={editFormData.graduation_year}
                     onChange={e => setEditFormData({ ...editFormData, graduation_year: e.target.value })}
                   />
                 </div>
@@ -515,10 +556,10 @@ export default function AdminStudents() {
                     <span>Registered Date of Birth (DOB)</span>
                     <span style={{ fontSize: '0.72rem', color: '#38bdf8', fontWeight: 500 }}>Used for student portal sign-in</span>
                   </label>
-                  <input 
-                    className="form-input" 
-                    type="date" 
-                    value={editFormData.dob || ''} 
+                  <input
+                    className="form-input"
+                    type="date"
+                    value={editFormData.dob || ''}
                     onChange={e => setEditFormData({ ...editFormData, dob: e.target.value })}
                     style={{ colorScheme: 'dark' }}
                   />
@@ -532,24 +573,24 @@ export default function AdminStudents() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div>
                       <label className="form-label" style={{ fontSize: '0.75rem' }}>Email Address *</label>
-                      <input 
-                        className="form-input" 
-                        type="email" 
-                        value={editFormData.email || ''} 
+                      <input
+                        className="form-input"
+                        type="email"
+                        value={editFormData.email || ''}
                         onChange={e => setEditFormData({ ...editFormData, email: e.target.value })}
                         placeholder="student@gmail.com"
-                        required 
+                        required
                       />
                       <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Syncs student login & institutional profile</span>
                     </div>
                     <div>
                       <label className="form-label" style={{ fontSize: '0.75rem' }}>Phone / Mobile Number</label>
-                      <input 
-                        className="form-input" 
-                        type="tel" 
-                        value={editFormData.mobile || ''} 
+                      <input
+                        className="form-input"
+                        type="tel"
+                        value={editFormData.mobile || ''}
                         onChange={e => setEditFormData({ ...editFormData, mobile: e.target.value })}
-                        placeholder="+91 9876543210" 
+                        placeholder="+91 9876543210"
                       />
                       <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Used for placement notifications</span>
                     </div>
@@ -561,8 +602,8 @@ export default function AdminStudents() {
                 <label className="form-label" style={{ color: '#f87171' }}>
                   Administrative Justification / Reason (Mandatory for Audit Trail) *
                 </label>
-                <textarea 
-                  className="form-textarea" 
+                <textarea
+                  className="form-textarea"
                   rows={2}
                   placeholder="e.g. Grade revaluation by VTU exam cell, official memo dated 10-Sept-2026"
                   value={editFormData.reason}
