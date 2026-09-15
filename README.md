@@ -4,6 +4,9 @@ A full-stack, institutional-grade placement management platform designed to elim
 
 ---
 
+
+
+
 ## 1. Architecture & Security Guarantees
 
 1. **Deterministic Eligibility Engine (`eligibilityEngine.js`)**:
@@ -588,5 +591,6 @@ Before taking the platform live for campus recruitment drives, verify each item:
 - [ ] **Health Check Monitoring**: Setup an uptime monitor pinging `https://placement.yourinstitution.edu/api/auth/demo-accounts` or root health check.
 
 
-#   P V  
+#   P V 
+ 
  
