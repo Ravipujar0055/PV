@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { 
-  Briefcase, UserCheck, FileText, AlertOctagon, 
+  Briefcase, UserCheck, FileText, 
   BarChart3, Users, Building, UploadCloud, ShieldAlert,
   ClipboardList, CheckCircle
 } from 'lucide-react';
@@ -12,8 +12,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
   const studentLinks = [
     { id: 'drives', label: 'Available Drives', icon: Briefcase },
     { id: 'profile', label: 'Verified Profile', icon: UserCheck },
-    { id: 'applications', label: 'My Applications', icon: FileText },
-    { id: 'google_form_sim', label: 'Google Form Sim (Test)', icon: AlertOctagon }
+    { id: 'applications', label: 'My Applications', icon: FileText }
   ];
 
   const adminLinks = [
@@ -80,11 +79,6 @@ export default function Sidebar({ activeTab, setActiveTab }) {
             >
               <Icon size={18} color={isActive ? '#818cf8' : 'currentColor'} />
               <span>{link.label}</span>
-              {link.id === 'google_form_sim' && (
-                <span style={{ marginLeft: 'auto', fontSize: '0.65rem', background: '#991b1b', color: '#fca5a5', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>
-                  TEST
-                </span>
-              )}
             </button>
           );
         })}

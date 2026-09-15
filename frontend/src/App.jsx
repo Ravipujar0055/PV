@@ -9,7 +9,6 @@ import Login from './pages/Login';
 import StudentDashboard from './pages/StudentDashboard';
 import StudentProfile from './pages/StudentProfile';
 import StudentApplications from './pages/StudentApplications';
-import GoogleFormSimulator from './pages/GoogleFormSimulator';
 
 import AdminDashboard from './pages/AdminDashboard';
 import AdminCompanies from './pages/AdminCompanies';
@@ -66,8 +65,6 @@ export default function App() {
           return <StudentProfile />;
         case 'applications':
           return <StudentApplications />;
-        case 'google_form_sim':
-          return <GoogleFormSimulator />;
         default:
           return <StudentDashboard onNavigate={setActiveTab} />;
       }

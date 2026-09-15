@@ -277,8 +277,8 @@ export default function AdminImport() {
             'diploma_year', 'diploma year', 'diploma_passing_year', 'hsc_year', 'hsc year'
           ]);
 
-          const tenthYear = parseYear(tenthYearRaw, gradYear ? gradYear - 6 : 2019);
-          const twelfthYear = parseYear(twelfthYearRaw, gradYear ? gradYear - 4 : 2021);
+          const tenthYear = parseYear(tenthYearRaw, gradYear ? gradYear - 6 : 2021);
+          const twelfthYear = parseYear(twelfthYearRaw, gradYear ? gradYear - 4 : 2023);
 
           const dobRaw = extractField(r, [
             'date_of_birth_dob', 'date of birth (dob)', 'date of birth', 
@@ -346,83 +346,99 @@ export default function AdminImport() {
   const handleLoadSampleTemplate = () => {
     const templateData = [
       {
-        usn: "1MS21CS101",
-        name: "Aditya Verma",
-        email: "aditya.verma@placement.edu",
-        dob: "2003-04-15",
-        branch: "CSE",
-        degree: "B.Tech",
-        cgpa: 8.45,
-        tenth_percentage: 86.5,
-        tenth_year: 2019,
-        twelfth_percentage: 84.0,
-        twelfth_year: 2021,
-        active_backlogs: 0,
-        backlog_history_count: 0,
-        graduation_year: 2027
-      },
-      {
-        usn: "1MS21CS102",
-        name: "Ananya Sharma",
-        email: "ananya.sharma@placement.edu",
-        dob: "2003-08-22",
-        branch: "CSE",
-        degree: "B.Tech",
-        cgpa: 9.12,
-        tenth_percentage: 94.0,
-        tenth_year: 2019,
-        twelfth_percentage: 92.5,
-        twelfth_year: 2021,
-        active_backlogs: 0,
-        backlog_history_count: 0,
-        graduation_year: 2027
-      },
-      {
-        usn: "1MS21EC103",
-        name: "Chirag Hegde",
-        email: "chirag.h@placement.edu",
-        dob: "2003-11-05",
-        branch: "ECE",
-        degree: "B.Tech",
-        cgpa: 7.35,
-        tenth_percentage: 78.5,
-        tenth_year: 2019,
-        twelfth_percentage: 76.0,
-        twelfth_year: 2021,
-        active_backlogs: 0,
-        backlog_history_count: 0,
-        graduation_year: 2027
-      },
-      {
-        usn: "1MS21IS104",
-        name: "Divya Nair",
-        email: "divya.n@placement.edu",
-        dob: "2003-01-19",
+        usn: "4NI23IS164",
+        name: "Ravi Annappa Pujar",
+        email: "ravipujar8073@gmail.com",
+        dob: "2005-03-23",
         branch: "ISE",
-        degree: "B.Tech",
-        cgpa: 8.80,
-        tenth_percentage: 89.0,
-        tenth_year: 2019,
-        twelfth_percentage: 87.5,
-        twelfth_year: 2021,
+        degree: "B.E",
+        cgpa: 9.52,
+        tenth_percentage: 94.4,
+        tenth_year: 2021,
+        twelfth_percentage: 93.0,
+        twelfth_year: 2023,
         active_backlogs: 0,
         backlog_history_count: 0,
         graduation_year: 2027
       },
       {
-        usn: "1MS21CS105",
-        name: "Eshwar Prasad",
-        email: "eshwar.p@placement.edu",
-        dob: "2003-06-30",
-        branch: "CSE",
-        degree: "B.Tech",
-        cgpa: 6.95,
-        tenth_percentage: 72.0,
-        tenth_year: 2019,
-        twelfth_percentage: 70.0,
-        twelfth_year: 2021,
-        active_backlogs: 1,
-        backlog_history_count: 1,
+        usn: "4NI23IS132",
+        name: "P manohara reddy",
+        email: "manohar.reddy@nie.ac.in",
+        dob: "2005-08-18",
+        branch: "ISE",
+        degree: "B.E",
+        cgpa: 8.58,
+        tenth_percentage: 97.0,
+        tenth_year: 2021,
+        twelfth_percentage: 90.0,
+        twelfth_year: 2023,
+        active_backlogs: 0,
+        backlog_history_count: 0,
+        graduation_year: 2027
+      },
+      {
+        usn: "4NI23CI110",
+        name: "Srinivas H",
+        email: "srinivas.h@nie.ac.in",
+        dob: "2005-01-03",
+        branch: "AIML",
+        degree: "B.E",
+        cgpa: 8.80,
+        tenth_percentage: 97.4,
+        tenth_year: 2021,
+        twelfth_percentage: 92.3,
+        twelfth_year: 2023,
+        active_backlogs: 0,
+        backlog_history_count: 0,
+        graduation_year: 2027
+      },
+      {
+        usn: "4NI23IS165",
+        name: "Ravishankar C",
+        email: "ravishankar.c@nie.ac.in",
+        dob: "2005-03-23",
+        branch: "ISE",
+        degree: "B.E",
+        cgpa: 8.50,
+        tenth_percentage: 90.0,
+        tenth_year: 2021,
+        twelfth_percentage: 92.0,
+        twelfth_year: 2023,
+        active_backlogs: 0,
+        backlog_history_count: 0,
+        graduation_year: 2027
+      },
+      {
+        usn: "4NI23CV045",
+        name: "Ananya Rao",
+        email: "ananya.rao@nie.ac.in",
+        dob: "2005-06-14",
+        branch: "CIVIL",
+        degree: "B.E",
+        cgpa: 8.15,
+        tenth_percentage: 88.5,
+        tenth_year: 2021,
+        twelfth_percentage: 85.0,
+        twelfth_year: 2023,
+        active_backlogs: 0,
+        backlog_history_count: 0,
+        graduation_year: 2027
+      },
+      {
+        usn: "4NI23EE028",
+        name: "Karthik Bhat",
+        email: "karthik.bhat@nie.ac.in",
+        dob: "2005-11-20",
+        branch: "EEE",
+        degree: "B.E",
+        cgpa: 8.40,
+        tenth_percentage: 91.0,
+        tenth_year: 2021,
+        twelfth_percentage: 89.5,
+        twelfth_year: 2023,
+        active_backlogs: 0,
+        backlog_history_count: 0,
         graduation_year: 2027
       }
     ];
@@ -433,7 +449,7 @@ export default function AdminImport() {
     setIsSpreadsheetLoaded(true);
     setMessage({
       type: "success",
-      text: "Loaded 5 certified student records with Date of Birth from template. Click 'Feed to Database' button to commit."
+      text: "Loaded 6 certified student records with Date of Birth from template. Click 'Commit to Database' button to commit."
     });
   };
 
@@ -487,6 +503,91 @@ export default function AdminImport() {
         "History Of Backlogs": 0,
         "Education Gap Months": 0
       },
+      {
+        "USN": "4NI23IS132",
+        "Name": "P manohara reddy",
+        "Date of Birth (DOB)": "2005-08-18",
+        "Email": "manohar.reddy@nie.ac.in",
+        "Branch": "ISE",
+        "Degree": "B.E",
+        "CGPA": 8.58,
+        "10th Percentage": 97.0,
+        "10th Year": 2021,
+        "12th Percentage": 90.0,
+        "12th Year": 2023,
+        "Graduation Year": 2027,
+        "Active Backlogs": 0,
+        "History Of Backlogs": 0,
+        "Education Gap Months": 0
+      },
+      {
+        "USN": "4NI23CI110",
+        "Name": "Srinivas H",
+        "Date of Birth (DOB)": "2005-01-03",
+        "Email": "srinivas.h@nie.ac.in",
+        "Branch": "AIML",
+        "Degree": "B.E",
+        "CGPA": 8.80,
+        "10th Percentage": 97.4,
+        "10th Year": 2021,
+        "12th Percentage": 92.3,
+        "12th Year": 2023,
+        "Graduation Year": 2027,
+        "Active Backlogs": 0,
+        "History Of Backlogs": 0,
+        "Education Gap Months": 0
+      },
+      {
+        "USN": "4NI23IS165",
+        "Name": "Ravishankar C",
+        "Date of Birth (DOB)": "2005-03-23",
+        "Email": "ravishankar.c@nie.ac.in",
+        "Branch": "ISE",
+        "Degree": "B.E",
+        "CGPA": 8.50,
+        "10th Percentage": 90.0,
+        "10th Year": 2021,
+        "12th Percentage": 92.0,
+        "12th Year": 2023,
+        "Graduation Year": 2027,
+        "Active Backlogs": 0,
+        "History Of Backlogs": 0,
+        "Education Gap Months": 0
+      },
+      {
+        "USN": "4NI23CV045",
+        "Name": "Ananya Rao",
+        "Date of Birth (DOB)": "2005-06-14",
+        "Email": "ananya.rao@nie.ac.in",
+        "Branch": "CIVIL",
+        "Degree": "B.E",
+        "CGPA": 8.15,
+        "10th Percentage": 88.5,
+        "10th Year": 2021,
+        "12th Percentage": 85.0,
+        "12th Year": 2023,
+        "Graduation Year": 2027,
+        "Active Backlogs": 0,
+        "History Of Backlogs": 0,
+        "Education Gap Months": 0
+      },
+      {
+        "USN": "4NI23EE028",
+        "Name": "Karthik Bhat",
+        "Date of Birth (DOB)": "2005-11-20",
+        "Email": "karthik.bhat@nie.ac.in",
+        "Branch": "EEE",
+        "Degree": "B.E",
+        "CGPA": 8.40,
+        "10th Percentage": 91.0,
+        "10th Year": 2021,
+        "12th Percentage": 89.5,
+        "12th Year": 2023,
+        "Graduation Year": 2027,
+        "Active Backlogs": 0,
+        "History Of Backlogs": 0,
+        "Education Gap Months": 0
+      }
     ];
 
     const ws = XLSX.utils.json_to_sheet(templateData);
@@ -767,7 +868,7 @@ export default function AdminImport() {
                         fontWeight: 600,
                         fontFamily: 'monospace'
                       }}>
-                        {r.tenth_year || '2019'}
+                        {r.tenth_year || '2021'}
                       </span>
                     </td>
                     <td>{Number(r.twelfth_percentage || 0).toFixed(1)}%</td>
@@ -777,7 +878,7 @@ export default function AdminImport() {
                         fontWeight: 600,
                         fontFamily: 'monospace'
                       }}>
-                        {r.twelfth_year || '2021'}
+                        {r.twelfth_year || '2023'}
                       </span>
                     </td>
                     <td>
