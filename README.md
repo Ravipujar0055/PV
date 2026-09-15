@@ -1,4 +1,4 @@
-eriPlace — Smart Placement Registration & Eligibility Verification System
+VeriPlace — Smart Placement Registration & Eligibility Verification System
 
 A full-stack, institutional-grade placement management platform designed to eliminate fraudulent academic claims (such as inflated CGPA or concealed backlogs) during campus recruitment drives.
 
