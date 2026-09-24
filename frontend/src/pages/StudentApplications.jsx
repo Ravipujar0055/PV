@@ -259,39 +259,42 @@ export default function StudentApplications() {
       {/* Eligibility Snapshot Verification Proof Modal */}
       {selectedSnapshot && (
         <div className="modal-overlay" onClick={() => setSelectedSnapshot(null)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <ShieldCheck size={20} color="#10b981" />
-                <h3 style={{ fontSize: '1.2rem', color: '#ffffff' }}>Eligibility Snapshot at Application Time</h3>
-              </div>
-              <button onClick={() => setSelectedSnapshot(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
-            </div>
-
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '1rem' }}>
-              This audit record preserves the certified institutional data values and rules verified at the exact moment of application submission.
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {Array.isArray(selectedSnapshot) ? selectedSnapshot.map((c, i) => (
-                <div key={i} className="checklist-item passed" style={{ padding: '0.65rem 0.85rem' }}>
-                  <div>
-                    <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{c.label}</div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Required: {c.required}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#34d399' }}>{c.actual}</div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Institutional Verified</div>
-                  </div>
+          <div className="modal-content modal-fixed-layout" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <div className="modal-header-fixed">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ShieldCheck size={20} color="#10b981" />
+                  <h3 style={{ fontSize: '1.2rem', color: '#ffffff', margin: 0 }}>Eligibility Snapshot at Application Time</h3>
                 </div>
-              )) : (
-                <pre style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', color: '#a5b4fc', overflowX: 'auto' }}>
-                  {JSON.stringify(selectedSnapshot, null, 2)}
-                </pre>
-              )}
+                <button onClick={() => setSelectedSnapshot(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer' }}>&times;</button>
+              </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: '0.4rem', marginBottom: 0 }}>
+                This audit record preserves the certified institutional data values and rules verified at the exact moment of application submission.
+              </p>
             </div>
 
-            <div style={{ marginTop: '1.5rem', textAlign: 'right' }}>
+            <div className="modal-scroll-body">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {Array.isArray(selectedSnapshot) ? selectedSnapshot.map((c, i) => (
+                  <div key={i} className="checklist-item passed" style={{ padding: '0.65rem 0.85rem' }}>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>{c.label}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Required: {c.required}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#34d399' }}>{c.actual}</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Institutional Verified</div>
+                    </div>
+                  </div>
+                )) : (
+                  <pre style={{ background: 'var(--bg-input)', padding: '1rem', borderRadius: 'var(--radius-sm)', fontSize: '0.8rem', color: '#a5b4fc', overflowX: 'auto' }}>
+                    {JSON.stringify(selectedSnapshot, null, 2)}
+                  </pre>
+                )}
+              </div>
+            </div>
+
+            <div className="modal-footer-fixed" style={{ textAlign: 'right' }}>
               <button className="btn btn-secondary" onClick={() => setSelectedSnapshot(null)}>Close</button>
             </div>
           </div>

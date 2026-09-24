@@ -69,7 +69,7 @@ export default function Navbar() {
   };
 
   return (
-    <header style={{ borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-card)' }}>
+    <header className="app-header">
       {/* Main App Navbar */}
       <div style={{
         padding: '0.85rem 1.75rem',
