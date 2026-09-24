@@ -1,4 +1,6 @@
-const BASE_URL = 'https://pv-s7jg.onrender.com/';
+const rawUrl = import.meta.env.VITE_API_URL || 'https://pv-s7jg.onrender.com/api';
+const cleanUrl = rawUrl.replace(/\/$/, '');
+const BASE_URL = cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
 
 export function getToken() {
   return localStorage.getItem('placement_token');

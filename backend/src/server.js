@@ -15,7 +15,7 @@ import { seedInitialData } from './services/seedData.js';
 import apiRouter from './routes/api.js';
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, '../uploads');
