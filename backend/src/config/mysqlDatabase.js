@@ -50,6 +50,8 @@ export const pool = mysql.createPool({
   database: MYSQL_DATABASE,
   waitForConnections: true,
   connectionLimit: 20,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 10000,
   queueLimit: 0,
   multipleStatements: true,
   dateStrings: true,

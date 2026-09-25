@@ -2,11 +2,21 @@ const rawUrl = import.meta.env.VITE_API_URL || 'https://pv-s7jg.onrender.com/api
 const cleanUrl = rawUrl.replace(/\/$/, '');
 const BASE_URL = cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
 
+// In-Memory Fast Cache & Request Deduplication
+const apiCache = new Map();
+const inFlightRequests = new Map();
+const CACHE_TTL_MS = 30000; // 30 seconds freshness for fast tab switching
+
+export function clearApiCache() {
+  apiCache.clear();
+}
+
 export function getToken() {
   return localStorage.getItem('placement_token');
 }
 
 export function setToken(token) {
+  clearApiCache();
   if (token) {
     localStorage.setItem('placement_token', token);
   } else {
@@ -16,6 +26,27 @@ export function setToken(token) {
 
 export async function apiRequest(endpoint, options = {}) {
   const token = getToken();
+  const method = (options.method || 'GET').toUpperCase();
+  const isGet = method === 'GET';
+  const cacheKey = `${token || 'anon'}:${endpoint}`;
+
+  // Serve from memory cache immediately if available and fresh
+  if (isGet && !options.skipCache) {
+    const cached = apiCache.get(cacheKey);
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL_MS)) {
+      return cached.data;
+    }
+    // Deduplicate in-flight requests to avoid redundant simultaneous network roundtrips
+    if (inFlightRequests.has(cacheKey)) {
+      return inFlightRequests.get(cacheKey);
+    }
+  }
+
+  // Any mutation (POST, PUT, PATCH, DELETE) automatically clears cache
+  if (!isGet) {
+    clearApiCache();
+  }
+
   const headers = {
     ...options.headers
   };
@@ -28,35 +59,48 @@ export async function apiRequest(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  let response;
-  try {
-    response = await fetch(`${BASE_URL}${endpoint}`, {
-      ...options,
-      headers
-    });
-  } catch {
-    const error = new Error('Cannot reach verification server. Please verify backend is running on port 5000.');
-    error.status = 503;
-    error.data = { error: 'Cannot reach verification server. Please verify backend is running on port 5000.' };
-    throw error;
+  const fetchPromise = (async () => {
+    let response;
+    try {
+      response = await fetch(`${BASE_URL}${endpoint}`, {
+        ...options,
+        headers
+      });
+    } catch {
+      const error = new Error('Cannot reach verification server. Please verify backend is running on port 5000.');
+      error.status = 503;
+      error.data = { error: 'Cannot reach verification server. Please verify backend is running on port 5000.' };
+      throw error;
+    }
+
+    const contentType = response.headers.get('content-type');
+    let data = null;
+    if (contentType && contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      data = await response.text();
+    }
+
+    if (!response.ok) {
+      const error = new Error(data?.error || `Request failed with status ${response.status}`);
+      error.status = response.status;
+      error.data = data;
+      throw error;
+    }
+
+    if (isGet) {
+      apiCache.set(cacheKey, { timestamp: Date.now(), data });
+    }
+
+    return data;
+  })();
+
+  if (isGet) {
+    inFlightRequests.set(cacheKey, fetchPromise);
+    fetchPromise.finally(() => inFlightRequests.delete(cacheKey));
   }
 
-  const contentType = response.headers.get('content-type');
-  let data = null;
-  if (contentType && contentType.includes('application/json')) {
-    data = await response.json();
-  } else {
-    data = await response.text();
-  }
-
-  if (!response.ok) {
-    const error = new Error(data?.error || `Request failed with status ${response.status}`);
-    error.status = response.status;
-    error.data = data;
-    throw error;
-  }
-
-  return data;
+  return fetchPromise;
 }
 
 export const api = {

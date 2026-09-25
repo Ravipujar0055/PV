@@ -21,9 +21,12 @@ export async function getAllDrives(req, res) {
   let appliedDriveIds = new Map();
 
   if (req.user && req.user.role === 'student') {
-    studentRecord = await dbHelper.get('SELECT * FROM academic_records WHERE usn = ?', [req.user.usn]);
-    const studentApps = await dbHelper.all('SELECT id as application_id, drive_id, application_status FROM applications WHERE student_id = ?', [req.user.studentId]);
-    for (const app of studentApps) {
+    const [rec, studentApps] = await Promise.all([
+      dbHelper.get('SELECT * FROM academic_records WHERE usn = ?', [req.user.usn]),
+      dbHelper.all('SELECT id as application_id, drive_id, application_status FROM applications WHERE student_id = ?', [req.user.studentId])
+    ]);
+    studentRecord = rec;
+    for (const app of (studentApps || [])) {
       appliedDriveIds.set(app.drive_id, { applicationId: app.application_id, status: app.application_status });
     }
   }
