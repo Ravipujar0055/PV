@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
 import { initDatabase } from './config/database.js';
-import { seedInitialData } from './services/seedData.js';
 import apiRouter from './routes/api.js';
 
 const app = express();
@@ -61,13 +60,7 @@ async function startServer() {
   // Initialize Database Schema and Admin
   await initDatabase();
 
-  // Only seed dummy data if explicitly requested via environment variable
-  if (process.env.SEED_DUMMY_DATA === 'true') {
-    console.log('SEED_DUMMY_DATA is true: Seeding demo accounts and mock placement drives...');
-    await seedInitialData();
-  } else {
-    console.log(`Database initialized in CLEAN mode (Zero dummy data, Admin account active) using [${process.env.DB_TYPE || 'mysql'}].`);
-  }
+  console.log(`Database initialized in production mode (Admin active) using [${process.env.DB_TYPE || 'mysql'}].`);
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`=======================================================`);
